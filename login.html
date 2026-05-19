@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AutoGest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="nav-logo">AUTO<span>GEST</span></a>
+    <div class="nav-links">
+      <a href="/projects">Projetos</a>
+      <a href="/carros">Catálogo</a>
+      <a href="/carros/gerencia">Gerência</a>
+      <a href="/usuarios/cadastro.html">Cadastrar</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="auth-section">
+      <div class="auth-card">
+        <div class="auth-icon">🔐</div>
+        <h2>Entrar no Sistema</h2>
+        <p class="auth-subtitle">Acesse sua conta para gerenciar veículos</p>
+
+        <form action="/usuarios/login" method="POST" class="auth-form">
+
+          <div class="form-group">
+            <label for="login">Login</label>
+            <input
+              type="text"
+              id="login"
+              name="login"
+              placeholder="Seu login"
+              required
+              autofocus
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Sua senha"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn-primary btn-full">Entrar</button>
+        </form>
+
+        <p class="auth-switch">
+          Não tem conta? <a href="/usuarios/cadastro.html">Cadastre-se</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 AutoGest — Sistema de Gerência de Veículos</p>
+  </footer>
+
+</body>
+</html>
