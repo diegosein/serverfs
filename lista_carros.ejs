@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Carros | AutoGest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="nav-logo">AUTO<span>GEST</span></a>
+    <div class="nav-links">
+      <a href="/projects">Projetos</a>
+      <a href="/carros" class="active">Catálogo</a>
+      <a href="/carros/gerencia">Gerência</a>
+      <a href="/usuarios" class="btn-nav">Usuários</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-hero">
+      <h1 class="page-title">Catálogo de <span>Veículos</span></h1>
+      <p class="page-subtitle">
+        <strong><%= carros.length %></strong>
+        veículo<%= carros.length !== 1 ? 's' : '' %> no sistema
+      </p>
+    </section>
+
+    <section class="container">
+
+      <% if (erro) { %>
+        <div class="alert alert-error">⚠ Erro ao carregar catálogo: <%= erro %></div>
+      <% } %>
+
+      <% if (carros.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <h3>Nenhum veículo cadastrado</h3>
+          <p>O catálogo está vazio no momento.</p>
+          <a href="/carros/gerencia" class="btn-primary" style="margin-top:1rem;">Adicionar Veículo</a>
+        </div>
+      <% } else { %>
+
+        <!-- Grid de cards -->
+        <div class="cars-grid">
+          <% carros.forEach(carro => { %>
+            <div class="car-card <%= carro.qtde_disponivel === 0 ? 'esgotado' : '' %>">
+              <div class="car-badge">
+                <% if (carro.qtde_disponivel === 0) { %>
+                  <span class="badge badge-esgotado">ESGOTADO</span>
+                <% } else { %>
+                  <span class="badge badge-disponivel"><%= carro.qtde_disponivel %> un.</span>
+                <% } %>
+              </div>
+              <div class="car-icon">🚘</div>
+              <div class="car-info">
+                <h3><%= carro.marca %></h3>
+                <p class="car-modelo"><%= carro.modelo %></p>
+                <p class="car-ano"><%= carro.ano %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Ano</th>
+                <th>Qtd. Disponível</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% carros.forEach(carro => { %>
+                <tr class="<%= carro.qtde_disponivel === 0 ? 'row-esgotado' : '' %>">
+                  <td><strong><%= carro.marca %></strong></td>
+                  <td><%= carro.modelo %></td>
+                  <td><%= carro.ano %></td>
+                  <td><%= carro.qtde_disponivel %></td>
+                  <td>
+                    <% if (carro.qtde_disponivel === 0) { %>
+                      <span class="badge badge-esgotado">ESGOTADO</span>
+                    <% } else { %>
+                      <span class="badge badge-disponivel">Disponível</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } %>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 AutoGest — Sistema de Gerência de Veículos</p>
+  </footer>
+
+</body>
+</html>

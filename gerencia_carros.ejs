@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerência de Carros | AutoGest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="nav-logo">AUTO<span>GEST</span></a>
+    <div class="nav-links">
+      <a href="/projects">Projetos</a>
+      <a href="/carros">Catálogo</a>
+      <a href="/carros/gerencia" class="active">Gerência</a>
+      <a href="/usuarios" class="btn-nav">Usuários</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-hero">
+      <h1 class="page-title">Gerência de <span>Veículos</span></h1>
+      <p class="page-subtitle">Cadastrar, Editar, Remover e Vender veículos</p>
+    </section>
+
+    <section class="container">
+
+
+      <% if (sucesso) { %>
+        <div class="alert alert-success" style="margin-bottom:1.5rem;">✅ <%= sucesso %></div>
+      <% } %>
+      <% if (erro) { %>
+        <div class="alert alert-error" style="margin-bottom:1.5rem;">⚠ <%= erro %></div>
+      <% } %>
+
+
+      <div class="management-card">
+        <h2 class="card-title"><span class="card-num">+</span> Cadastrar Novo Veículo</h2>
+        <form action="/carros" method="POST" class="crud-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Marca</label>
+              <input type="text" name="marca" placeholder="Ex: Toyota" required>
+            </div>
+            <div class="form-group">
+              <label>Modelo</label>
+              <input type="text" name="modelo" placeholder="Ex: Corolla" required>
+            </div>
+            <div class="form-group">
+              <label>Ano</label>
+              <input type="number" name="ano" placeholder="Ex: 2023"
+                     min="1900" max="2025" required>
+            </div>
+            <div class="form-group">
+              <label>Qtd. Disponível</label>
+              <input type="number" name="qtde_disponivel" placeholder="Ex: 10"
+                     min="0" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">🚗 Cadastrar Veículo</button>
+        </form>
+      </div>
+
+
+      <div class="management-card">
+        <h2 class="card-title"><span class="card-num">≡</span> Veículos Cadastrados</h2>
+
+        <% if (carros.length === 0) { %>
+          <div class="empty-state-small">
+            <p>🚗 Nenhum veículo cadastrado ainda. Use o formulário acima.</p>
+          </div>
+        <% } else { %>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Ano</th>
+                  <th>Qtd.</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% carros.forEach(carro => { %>
+
+          
+                  <tr id="row-<%= carro._id %>"
+                      class="<%= carro.qtde_disponivel === 0 ? 'row-esgotado' : '' %>">
+                    <td><strong><%= carro.marca %></strong></td>
+                    <td><%= carro.modelo %></td>
+                    <td><%= carro.ano %></td>
+                    <td><%= carro.qtde_disponivel %></td>
+                    <td>
+                      <% if (carro.qtde_disponivel === 0) { %>
+                        <span class="badge badge-esgotado">ESGOTADO</span>
+                      <% } else { %>
+                        <span class="badge badge-disponivel">Disponível</span>
+                      <% } %>
+                    </td>
+                    <td style="white-space:nowrap;">
+
+               
+                      <form action="/carros/<%= carro._id %>/vender"
+                            method="POST" style="display:inline">
+                        <button
+                          type="submit"
+                          class="btn-action btn-vender"
+                          <%= carro.qtde_disponivel === 0 ? 'disabled title="Esgotado"' : '' %>
+                        >💰 Vender</button>
+                      </form>
+
+                     
+                      <button class="btn-action btn-editar"
+                              onclick="toggleEdit('<%= carro._id %>')">
+                        ✏️ Editar
+                      </button>
+
+                      
+                      <form action="/carros/<%= carro._id %>?_method=DELETE"
+                            method="POST" style="display:inline"
+                            onsubmit="return confirm('Remover <%= carro.marca %> <%= carro.modelo %>?')">
+                        <button type="submit" class="btn-action btn-remover">
+                          🗑 Remover
+                        </button>
+                      </form>
+
+                    </td>
+                  </tr>
+
+                  
+                  <tr id="edit-<%= carro._id %>" class="edit-row" style="display:none;">
+                    <td colspan="6">
+                      <form action="/carros/<%= carro._id %>?_method=PUT"
+                            method="POST" class="edit-inline-form">
+                        <div class="form-row">
+                          <div class="form-group">
+                            <label>Marca</label>
+                            <input type="text" name="marca"
+                                   value="<%= carro.marca %>" required>
+                          </div>
+                          <div class="form-group">
+                            <label>Modelo</label>
+                            <input type="text" name="modelo"
+                                   value="<%= carro.modelo %>" required>
+                          </div>
+                          <div class="form-group">
+                            <label>Ano</label>
+                            <input type="number" name="ano"
+                                   value="<%= carro.ano %>"
+                                   min="1900" max="2025" required>
+                          </div>
+                          <div class="form-group">
+                            <label>Qtd. Disponível</label>
+                            <input type="number" name="qtde_disponivel"
+                                   value="<%= carro.qtde_disponivel %>"
+                                   min="0" required>
+                          </div>
+                        </div>
+                        <div class="edit-actions">
+                          <button type="submit" class="btn-primary btn-sm">
+                            💾 Salvar
+                          </button>
+                          <button type="button" class="btn-secondary btn-sm"
+                                  onclick="toggleEdit('<%= carro._id %>')">
+                            ✕ Cancelar
+                          </button>
+                        </div>
+                      </form>
+                    </td>
+                  </tr>
+
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 AutoGest — Sistema de Gerência de Veículos</p>
+  </footer>
+
+  <script>
+    function toggleEdit(id) {
+      const editRow = document.getElementById('edit-' + id);
+      const dataRow = document.getElementById('row-' + id);
+      const isHidden = editRow.style.display === 'none';
+      editRow.style.display = isHidden ? 'table-row' : 'none';
+      dataRow.style.opacity  = isHidden ? '0.4' : '1';
+    }
+  </script>
+
+</body>
+</html>
